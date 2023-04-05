@@ -1,5 +1,7 @@
 package com.example.dcard
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Window
 import androidx.activity.ComponentActivity
@@ -12,8 +14,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
@@ -57,7 +62,7 @@ fun SearchRepositories() {
             .distinctUntilChanged() // 僅當文本發生更改時才觸發搜索
             .collect {
                 isLoading = true
-                if (!isAlphaNumeric(value)) {
+                if (containsEmoji(value) || value.contains("\n")) {
                     isTypeError = true
                 }
                 else {
@@ -87,7 +92,6 @@ fun SearchRepositories() {
             onValueChange = { text ->
                 value = text.replace('0', '*')
                 isLoading = true
-                println(value)
             },
             label = { Text("Search") },
             modifier = Modifier.padding(vertical = 16.dp),
@@ -121,12 +125,9 @@ fun SearchRepositories() {
     }
 }
 
-fun isAlphaNumeric(input: String): Boolean {
-    val pattern = Regex("[a-zA-Z0-9]+")
-    if (input == "")
-        return true
-    else
-        return input.matches(pattern)
+fun containsEmoji(input: String): Boolean {
+    val emojiPattern = Regex("[\uD83C-\uDBFF\uDC00-\uDFFF]+")
+    return emojiPattern.containsMatchIn(input)
 }
 
 @Composable

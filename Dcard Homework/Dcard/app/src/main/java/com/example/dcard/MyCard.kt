@@ -12,8 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import kotlinx.coroutines.launch
 
 class MyCard(val title: String, val description: String, val url: String) {
